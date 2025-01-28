@@ -177,7 +177,7 @@
         float a = max(C.r, max(C.g, C.b));
         a = pow(.1 * a, .1);
         a = clamp(a, 0., 1.);
-        gl_FragColor = vec4(1. - C, 1. - 1.0);
+        gl_FragColor = vec4(C, 1.0);
     }
 </script>
 <!-- partial -->

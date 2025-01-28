@@ -3,6 +3,9 @@ const image = document.getElementsByTagName("img")[0];
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
+// const ctx = document.getElementById("canvas").getContext("2d");
+// ctx.fillStyle = "#FFA500";
+
 const params = {
     SIM_RESOLUTION: 256,
     DYE_RESOLUTION: 4096,
@@ -10,7 +13,7 @@ const params = {
     VELOCITY_DISSIPATION: .9,
     PRESSURE_ITERATIONS: 10,
     SPLAT_RADIUS: 3 / window.innerHeight,
-    color: {r: .7, g: .5, b: .7}
+    color: {r: .2, g: .7, b: .2}
 };
 
 const pointer = {
@@ -44,10 +47,9 @@ const gradientSubtractProgram = createProgram("fragShaderGradientSubtract");
 const advectionProgram = createProgram("fragShaderAdvection");
 const displayProgram = createProgram("fragShaderDisplay");
 
-
 initFBOs();
 render();
-image.style.opacity = "1";
+image.style.opacity = "0.5";
 
 
 window.addEventListener("resize", () => {
@@ -195,6 +197,7 @@ function createFBO(w, h, type = gl.RGBA) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     gl.viewport(0, 0, w, h);
+
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     return {
@@ -261,6 +264,7 @@ function render() {
 
         gl.uniform1i(splatProgram.uniforms.u_input_txr, outputColor.read().attach(0));
         gl.uniform3f(splatProgram.uniforms.u_point_value, 1. - params.color.r, 1. - params.color.g, 1. - params.color.b);
+        
         blit(outputColor.write());
         outputColor.swap();
     }
@@ -308,5 +312,6 @@ function render() {
     gl.uniform1i(displayProgram.uniforms.u_output_texture, outputColor.read().attach(0));
     blit();
 
+    
     requestAnimationFrame(render);
 }
