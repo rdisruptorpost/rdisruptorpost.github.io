@@ -29,6 +29,21 @@
             height: 100%;
             position: absolute;
         }
+
+        .overlay2 {
+            color: #430e54;
+            position: fixed;
+            top: 70%;
+            left: 50%;
+            max-width: 50%;
+            transform: translate(-50%, -50%);
+            font-family: sans-serif;
+            font-size: 4vh;
+            font-weight: bold;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
     </style>
 
 </head>
@@ -37,8 +52,11 @@
     <div id="canvasContainer">
         <canvas></canvas>
         <canvas id="maskCanvas"> </canvas>
-    <input id="name"></input>
 
+        <div class="overlay2">
+            info@liquorice.studio
+          </div>
+          
     </div>
     
     <script src="./script.js"></script>
