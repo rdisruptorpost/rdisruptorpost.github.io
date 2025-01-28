@@ -31,7 +31,7 @@
         }
 
         .overlay2 {
-            color: #430e54;
+            color: black;
             position: fixed;
             top: 70%;
             left: 50%;
@@ -42,7 +42,23 @@
             font-weight: bold;
             pointer-events: none;
             text-transform: uppercase;
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: rgba(255, 255, 255, 0.3);
         }
+
+        svg{
+  font   : bold 70px Century Gothic, Arial;
+  width  : 100%;
+  height : 120px;
+}
+
+text{
+  fill            : none;
+  stroke          : rgba(255, 255, 255, 0.3);
+  stroke-width    : .4px;
+  stroke-linejoin : round;
+}
+
 
     </style>
 
@@ -54,7 +70,11 @@
         <canvas id="maskCanvas"> </canvas>
 
         <div class="overlay2">
+
             info@liquorice.studio
+            <!-- <svg viewBox="0 0 450 50">
+                <text y="50" font-size="1v">info@liquorice.studio</text>
+              </svg> -->
           </div>
           
     </div>
