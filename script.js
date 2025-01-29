@@ -25,24 +25,29 @@ SOFTWARE.
 'use strict';
 
 const overlayConfig = {
-	text: 'LIQUORICE',
+	text: 'LIQUORICE.STUDIO',
 	fontWidth: '900',
-	font: 'Arial',
+	font: 'Lemon',
 	fontSize: 1/12, // percentage to canvas width
 }
 
-const overlayConfig2 = {
-	text: 'STUDIO',
-	fontWidth: '900',
-	font: 'Arial',
-	fontSize: 1/12, // percentage to canvas width
-}
+// const overlayConfig2 = {
+// 	text: 'STUDIO',
+// 	fontWidth: '900',
+// 	font: 'Arial',
+// 	fontSize: 1/12, // percentage to canvas width
+// }
+
+// var myFont = new FontFace('myFont', 'url(Lemon.ttf)');
+// let lemonFont = myFont.load()
+// document.fonts.add(lemonFont);
 
 // overlay canvas
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function resizeOverlayCanvas() {
+
 	let overlayCanvas = document.getElementById('maskCanvas');
 	let container = document.getElementById('canvasContainer');
 
@@ -61,20 +66,35 @@ function resizeOverlayCanvas() {
 	ctx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
 	let fontSize = Math.round(rect.width * overlayConfig.fontSize);
-	ctx.font = overlayConfig.fontWidth + ' ' + fontSize + 'px ' + overlayConfig.font;
+
+	let myFont = new FontFace(
+		"Lemon",
+		"url(Lemon-Regular.woff2)"
+	  );
+
+
+	myFont.load().then((font) => {
+		document.fonts.add(font);
+		ctx.font = overlayConfig.fontWidth + ' ' + fontSize + 'px ' + overlayConfig.font;
+
+		ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+		ctx.lineWidth = 3;
 	
-	ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-	ctx.lineWidth = 3;
+		ctx.textBaseline = 'middle'; 
+		ctx.textAlign = 'center';
+	
+		ctx.strokeText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3);
+		// ctx.strokeText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
+	
+		ctx.globalCompositeOperation = 'destination-out';
+		ctx.fillText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3);
 
-	ctx.textBaseline = 'middle'; 
-	ctx.textAlign = 'center';
+	  });
 
-	ctx.strokeText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3.4);
-	ctx.strokeText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
-
-	ctx.globalCompositeOperation = 'destination-out';
-	ctx.fillText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3.4);
-	ctx.fillText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
+	// ctx.font = overlayConfig.fontWidth + ' ' + fontSize + 'px ' + overlayConfig.font;
+	
+	
+	// ctx.fillText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
 }
 
 // const input = document.getElementById('name');
@@ -91,7 +111,6 @@ resizeOverlayCanvas();
 
 // Resize canvas on window resize
 window.addEventListener('resize', resizeOverlayCanvas);
-
 
 // Simulation section
 

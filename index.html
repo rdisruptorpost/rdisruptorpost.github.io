@@ -20,24 +20,6 @@
             margin: 0;
         }
 
-        #loading {
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            background-color: gray;
-            color: white;
-            opacity: 1;
-            transition: 0.5s;
-            visibility: visible;
-        }
-
-        #loading.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
         #canvasContainer {
             position: relative;
             width: 100vw;
@@ -58,12 +40,10 @@
             max-width: 50%;
             transform: translate(-50%, -50%);
             font-family: sans-serif;
-            font-size: 2vw;
+            font-size: 1vw;
             font-weight: lighter;
             pointer-events: none;
             text-transform: uppercase;
-            /* -webkit-text-stroke-width: 1px;
-            -webkit-text-stroke-color: rgba(255, 255, 255, 0.3); */
         }
 
         #snackbar {
@@ -84,29 +64,29 @@
         }
 
         #snackbar.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
 
         @-webkit-keyframes fadein {
-        from {bottom: 0; opacity: 0;} 
-        to {bottom: 30px; opacity: 1;}
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
         }
 
         @keyframes fadein {
-        from {bottom: 0; opacity: 0;}
-        to {bottom: 30px; opacity: 1;}
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
         }
 
         @-webkit-keyframes fadeout {
-        from {bottom: 30px; opacity: 1;} 
-        to {bottom: 0; opacity: 0;}
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
         }
 
         @keyframes fadeout {
-        from {bottom: 30px; opacity: 1;}
-        to {bottom: 0; opacity: 0;}
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
         }
 
     </style>
@@ -116,16 +96,11 @@
 <body>
     <div id="canvasContainer">
         <canvas></canvas>
-        <canvas id="maskCanvas"> </canvas>
+        <canvas id="maskCanvas"></canvas>
 
         <div class="overlay2">
-
             info@liquorice.studio
-            <!-- <svg viewBox="0 0 450 50">
-                <text y="50" font-size="1v">info@liquorice.studio</text>
-                </svg> -->
             </div>
-
         <div id="snackbar">Copied email to clipboard (:</div>
             
     </div>
