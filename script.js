@@ -25,13 +25,22 @@ SOFTWARE.
 'use strict';
 
 const overlayConfig = {
-	text: 'LIQUORICE STUDIOS',
+	text: 'LIQUORICE',
+	fontWidth: '900',
+	font: 'Arial',
+	fontSize: 1/12, // percentage to canvas width
+}
+
+const overlayConfig2 = {
+	text: 'STUDIO',
 	fontWidth: '900',
 	font: 'Arial',
 	fontSize: 1/12, // percentage to canvas width
 }
 
 // overlay canvas
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function resizeOverlayCanvas() {
 	let overlayCanvas = document.getElementById('maskCanvas');
@@ -41,7 +50,6 @@ function resizeOverlayCanvas() {
 	overlayCanvas.height = container.offsetHeight;
 
 	let ctx = overlayCanvas.getContext('2d');
-
 	let dpr = window.devicePixelRatio || 1;
 	let rect = overlayCanvas.getBoundingClientRect();
 
@@ -54,17 +62,19 @@ function resizeOverlayCanvas() {
 
 	let fontSize = Math.round(rect.width * overlayConfig.fontSize);
 	ctx.font = overlayConfig.fontWidth + ' ' + fontSize + 'px ' + overlayConfig.font;
-
+	
 	ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-	ctx.lineWidth = 2;
+	ctx.lineWidth = 3;
 
 	ctx.textBaseline = 'middle'; 
 	ctx.textAlign = 'center';
 
-	ctx.strokeText(overlayConfig.text, rect.width / 2, rect.height / 2);
+	ctx.strokeText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3.4);
+	ctx.strokeText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
 
 	ctx.globalCompositeOperation = 'destination-out';
-	ctx.fillText(overlayConfig.text, rect.width / 2, rect.height / 2);
+	ctx.fillText(overlayConfig.text, rect.width / 2, overlayCanvas.height / 3.4);
+	ctx.fillText(overlayConfig2.text, rect.width / 2, overlayCanvas.height / 2.5);
 }
 
 // const input = document.getElementById('name');
@@ -86,6 +96,7 @@ window.addEventListener('resize', resizeOverlayCanvas);
 // Simulation section
 
 const canvas = document.getElementsByTagName('canvas')[0];
+
 resizeCanvas();
 
 let config = {
@@ -116,7 +127,7 @@ let config = {
 	SUNRAYS_WEIGHT: 1.0,
 	START_HUE: 0.5,
 	END_HUE: 1.0,
-	RENDER_SPEED: 0.4
+	RENDER_SPEED: 0.1
 };
 
 function PointerPrototype() {
@@ -1443,61 +1454,68 @@ function correctRadius(radius) {
 	return radius;
 }
 
-canvas.addEventListener('mousedown', (e) => {
-	let posX = scaleByPixelRatio(e.offsetX);
-	let posY = scaleByPixelRatio(e.offsetY);
-	let pointer = pointers.find((p) => p.id == -1);
-	if (pointer == null) pointer = new PointerPrototype();
-	updatePointerDownData(pointer, -1, posX, posY);
-});
+const init = async () => {
+	await delay(1500);
+	canvas.addEventListener('mousedown', (e) => {
 
-document.body.addEventListener('mousemove', (e) => {
-	let pointer = pointers[0];
-	// if (!pointer.down) return;
-	let posX = scaleByPixelRatio(e.offsetX);
-	let posY = scaleByPixelRatio(e.offsetY);
-	updatePointerMoveData(pointer, posX, posY);
-});
-
-window.addEventListener('mouseup', () => {
-	updatePointerUpData(pointers[0]);
-});
-
-document.body.addEventListener('touchstart', (e) => {
-	e.preventDefault();
-	const touches = e.targetTouches;
-	while (touches.length >= pointers.length) pointers.push(new PointerPrototype());
-	for (let i = 0; i < touches.length; i++) {
-		let posX = scaleByPixelRatio(touches[i].pageX);
-		let posY = scaleByPixelRatio(touches[i].pageY);
-		updatePointerDownData(pointers[i + 1], touches[i].identifier, posX, posY);
-	}
-});
-
-document.body.addEventListener(
-	'touchmove',
-	(e) => {
+		let posX = scaleByPixelRatio(e.offsetX);
+		let posY = scaleByPixelRatio(e.offsetY);
+		let pointer = pointers.find((p) => p.id == -1);
+		if (pointer == null) pointer = new PointerPrototype();
+		updatePointerDownData(pointer, -1, posX, posY);
+	});
+	
+	document.body.addEventListener('mousemove', (e) => {
+		let pointer = pointers[0];
+		// if (!pointer.down) return;
+		let posX = scaleByPixelRatio(e.offsetX);
+		let posY = scaleByPixelRatio(e.offsetY);
+		updatePointerMoveData(pointer, posX, posY);
+	});
+	
+	window.addEventListener('mouseup', () => {
+		updatePointerUpData(pointers[0]);
+	});
+	
+	document.body.addEventListener('touchstart', (e) => {
 		e.preventDefault();
 		const touches = e.targetTouches;
+		while (touches.length >= pointers.length) pointers.push(new PointerPrototype());
 		for (let i = 0; i < touches.length; i++) {
-			let pointer = pointers[i + 1];
-			if (!pointer.down) continue;
 			let posX = scaleByPixelRatio(touches[i].pageX);
 			let posY = scaleByPixelRatio(touches[i].pageY);
-			updatePointerMoveData(pointer, posX, posY);
+			updatePointerDownData(pointers[i + 1], touches[i].identifier, posX, posY);
 		}
-	},
-	false
-);
+	});
+	
+	document.body.addEventListener(
+		'touchmove',
+		(e) => {
+			e.preventDefault();
+			const touches = e.targetTouches;
+			for (let i = 0; i < touches.length; i++) {
+				let pointer = pointers[i + 1];
+				if (!pointer.down) continue;
+				let posX = scaleByPixelRatio(touches[i].pageX);
+				let posY = scaleByPixelRatio(touches[i].pageY);
+				updatePointerMoveData(pointer, posX, posY);
+			}
+		},
+		false
+	);
+	
+	document.body.addEventListener('touchend', (e) => {
+		const touches = e.changedTouches;
+		for (const element of touches) {
+			let pointer = pointers.find((p) => p.id == element.identifier);
+			if (pointer == null) continue;
+			updatePointerUpData(pointer);
+		}
+	});
 
-document.body.addEventListener('touchend', (e) => {
-	const touches = e.changedTouches;
-	for (const element of touches) {
-		let pointer = pointers.find((p) => p.id == element.identifier);
-		if (pointer == null) continue;
-		updatePointerUpData(pointer);
-	}
-});
+  };
+
+  init()
 
 // window.addEventListener('keydown', (e) => {
 // 	if (e.code === 'KeyP') config.PAUSED = !config.PAUSED;
@@ -1639,3 +1657,5 @@ function hashCode(s) {
 setInterval(() => {
 	multipleSplats(5);
 }, 500)
+
+
