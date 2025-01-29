@@ -1456,7 +1456,10 @@ function correctRadius(radius) {
 
 const init = async () => {
 	await delay(1500);
+
 	canvas.addEventListener('mousedown', (e) => {
+
+		
 
 		let posX = scaleByPixelRatio(e.offsetX);
 		let posY = scaleByPixelRatio(e.offsetY);
@@ -1473,9 +1476,7 @@ const init = async () => {
 		updatePointerMoveData(pointer, posX, posY);
 	});
 	
-	window.addEventListener('mouseup', () => {
-		updatePointerUpData(pointers[0]);
-	});
+
 	
 	document.body.addEventListener('touchstart', (e) => {
 		e.preventDefault();
@@ -1516,6 +1517,25 @@ const init = async () => {
   };
 
   init()
+
+  function showSnackbar() {
+	var x = document.getElementById("snackbar");
+	x.className = "show";
+	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+  }
+
+  window.addEventListener('mouseup', () => {
+		
+	try {
+		navigator.clipboard.writeText("info@liquorice.studio");
+		console.log('Content copied to clipboard');
+		showSnackbar()
+	  } catch (err) {
+		console.error('Failed to copy: ', err);
+	  }
+
+		updatePointerUpData(pointers[0]);
+	});
 
 // window.addEventListener('keydown', (e) => {
 // 	if (e.code === 'KeyP') config.PAUSED = !config.PAUSED;
